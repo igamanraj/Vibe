@@ -141,7 +141,7 @@ export const FileExplorer = ({ files }: FileExplorerProps) => {
                     onSelect={handleFileSelect}
                     />
                 </ResizablePanel>
-                <ResizableHandle className="bg-primary transition-colors" />
+                <ResizableHandle className="hover:bg-primary transition-colors" />
 
                 <ResizablePanel defaultSize={70} minSize={50} className="bg-editor">
                     {selectedFile && files[selectedFile] ? (
