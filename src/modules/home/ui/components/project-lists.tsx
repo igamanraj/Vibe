@@ -59,7 +59,8 @@ export const ProjectsList = () =>{
                             </Link>
                         </Button>
                     ))
-                 }
+                } 
+                <p className="text-sm font-mono text-right">Made with ❤️ by "Aman"</p>
             </div>
         </div>
     )

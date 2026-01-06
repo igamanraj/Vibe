@@ -1,7 +1,3 @@
-import { FRAGMENT_TITLE_PROMPT, PROMPT, RESPONSE_PROMPT } from "@/prompt";
-import { inngest } from "./client";
-import { getSandbox, lastAssistantTextMessageContent, parseAgentOutput } from "./utils";
-import { Sandbox } from "@e2b/code-interpreter";
 import {
   gemini,
   createAgent,
@@ -11,9 +7,14 @@ import {
   type Message,
   createState,
 } from "@inngest/agent-kit";
-import { Code } from "lucide-react";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { inngest } from "./client";
+import { Code } from "lucide-react";
+import { SANDBOX_TIMEOUT } from "./types";
+import { Sandbox } from "@e2b/code-interpreter";
+import { FRAGMENT_TITLE_PROMPT, PROMPT, RESPONSE_PROMPT } from "@/prompt";
+import { getSandbox, lastAssistantTextMessageContent, parseAgentOutput } from "./utils";
 
 interface AgentState {
   summary?: string;
@@ -26,6 +27,7 @@ export const codeAgentFunction = inngest.createFunction(
   async ({ event, step }) => {
     const sandboxId = await step.run("get-sandbox-id", async () => {
       const sandbox = await Sandbox.create("vibe-nextjs-amantest4");
+    await sandbox.setTimeout(SANDBOX_TIMEOUT); // 1 hour
       return sandbox.sandboxId;
     });
 
@@ -41,6 +43,7 @@ export const codeAgentFunction = inngest.createFunction(
           orderBy: {
             createdAt: "desc",
           },
+          take: 5,
         });
 
         for (const message of messages) {
@@ -50,7 +53,7 @@ export const codeAgentFunction = inngest.createFunction(
             content: message.content,
           });
         }
-        return formattedMessages;
+        return formattedMessages.reverse();
       }
     );
 
@@ -197,7 +200,7 @@ export const codeAgentFunction = inngest.createFunction(
       description: "A fragment title generator",
       system: FRAGMENT_TITLE_PROMPT,
       model: gemini({
-        model: "gemini-2.0-flash-lite",
+        model: "gemini-2.0-flash",
       }),
     });
 
