@@ -7,15 +7,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/**
- * Convert a record of files to a tree structure.
- * @param files - Record of file paths to content
- * @returns Tree structure for TreeView component
- *
- * @example
- * Input: { "src/Button.tsx": "...", "README.md": "..." }
- * Output: [["src", "Button.tsx"], "README.md"]
- */
+
 export function convertFilesToTreeItems(
   files: Record<string, string>
 ): TreeItem[] {
@@ -49,13 +41,8 @@ export function convertFilesToTreeItems(
   }
 
   // Convert tree structure to TreeItem format
-  function convertNode(node: TreeNode, name?: string): TreeItem[] | TreeItem {
+  function convertNode(node: TreeNode): TreeItem[] {
     const entries = Object.entries(node);
-
-    if (entries.length === 0) {
-      return name || "";
-    }
-
     const children: TreeItem[] = [];
 
     for (const [key, value] of entries) {
@@ -64,18 +51,13 @@ export function convertFilesToTreeItems(
         children.push(key);
       } else {
         // It's a folder
-        const subTree = convertNode(value, key);
-        if (Array.isArray(subTree)) {
-          children.push([key, ...subTree]);
-        } else {
-          children.push([key, subTree]);
-        }
+        const subTree = convertNode(value);
+        children.push([key, subTree]);
       }
     }
 
     return children;
   }
 
-  const result = convertNode(tree);
-  return Array.isArray(result) ? result : [result];
+  return convertNode(tree);
 }

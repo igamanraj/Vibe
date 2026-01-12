@@ -60,7 +60,6 @@ export const ProjectsList = () =>{
                         </Button>
                     ))
                 } 
-                <p className="text-sm font-mono text-right">Made with ❤️ by "Aman"</p>
             </div>
         </div>
     )

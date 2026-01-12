@@ -10,7 +10,6 @@ import {
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { inngest } from "./client";
-import { Code } from "lucide-react";
 import { SANDBOX_TIMEOUT } from "./types";
 import { Sandbox } from "@e2b/code-interpreter";
 import { FRAGMENT_TITLE_PROMPT, PROMPT, RESPONSE_PROMPT } from "@/prompt";
@@ -200,7 +199,7 @@ export const codeAgentFunction = inngest.createFunction(
       description: "A fragment title generator",
       system: FRAGMENT_TITLE_PROMPT,
       model: gemini({
-        model: "gemini-2.0-flash",
+        model: "gemini-2.5-flash-lite",
       }),
     });
 
@@ -209,7 +208,7 @@ export const codeAgentFunction = inngest.createFunction(
       description: "A response generator",
       system: RESPONSE_PROMPT,
       model: gemini({
-        model: "gemini-2.0-flash-lite",
+        model: "gemini-2.5-flash-lite",
       }),
     });
 
